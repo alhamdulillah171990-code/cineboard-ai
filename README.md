@@ -22,10 +22,22 @@ Aplikasi ini sudah dikonfigurasi untuk dapat dideploy langsung ke Vercel sebagai
    PENTING! Tambahkan variable berikut di Dashboard Vercel (Settings > Environment Variables):
    - `GEMINI_API_KEY`: Masukkan API Key Gemini Anda.
 
-### 3. Konfigurasi Khusus (Sudah ditambahkan)
+### 4. Persiapan Android (APK)
 
-- **`vercel.json`**: Menangani routing SPA agar halaman tidak 404 saat direfresh di route tertentu.
-- **`vite.config.ts`**: Secara otomatis menyuntikkan `GEMINI_API_KEY` dari environment variable saat proses build.
+Proyek ini telah dikonfigurasi dengan Capacitor untuk build Android.
+
+**Langkah Build APK:**
+1. Pastikan Anda memiliki Android Studio.
+2. Jalankan `npm run cap:sync` untuk sinkronisasi aset web terbaru ke folder Android.
+3. Buka folder `android` di Android Studio atau jalankan `npm run cap:open`.
+4. Di Android Studio: **Build > Build Bundle(s) / APK(s) > Build APK(s)**.
+
+**Konfigurasi Firebase untuk Android:**
+Agar Google Login berfungsi di Android:
+1. Buka [Firebase Console](https://console.firebase.google.com/).
+2. Tambahkan App Android baru dengan package name: `com.cineboard.ai`.
+3. Download `google-services.json` dan letakkan di `android/app/`.
+4. Masukkan **SHA-1 fingerprint** dari keystore Anda di setelan Firebase App Android tersebut.
 
 ## 🛠️ Pengembangan Lokal
 
