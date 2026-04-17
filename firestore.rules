@@ -1,0 +1,55 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: projects
+    // Document ID: {projectId}
+    // Fields:
+    //   - id: string (required)
+    //   - name: string (required, 1-100 chars)
+    //   - userId: string (required, matches auth.uid)
+    //   - input: map (required)
+    //   - output: map (optional)
+    //   - lastUpdated: string (required, ISO 8601)
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    function isValidDateString(dateStr) {
+      return dateStr is string &&
+        dateStr.matches("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.*Z?$");
+    }
+
+    function isValidProject(data) {
+      return data.keys().hasAll(['id', 'name', 'userId', 'input', 'lastUpdated']) &&
+             data.id is string &&
+             data.name is string && data.name.size() >= 1 && data.name.size() <= 100 &&
+             data.userId is string && data.userId == request.auth.uid &&
+             data.input is map &&
+             (data.output == null || data.output is map) &&
+             isValidDateString(data.lastUpdated);
+    }
+
+    match /projects/{projectId} {
+      allow read: if isOwner(resource.data.userId);
+      allow create: if isAuthenticated() && isValidProject(request.resource.data) && request.resource.data.id == projectId;
+      allow update: if isOwner(resource.data.userId) && isValidProject(request.resource.data) && request.resource.data.id == resource.data.id;
+      allow delete: if isOwner(resource.data.userId);
+    }
+  }
+}
