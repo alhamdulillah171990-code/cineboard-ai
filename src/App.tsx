@@ -41,7 +41,8 @@ import {
   Plus,
   LogOut,
   LogIn,
-  Save
+  Save,
+  Smartphone
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import ReactMarkdown from 'react-markdown';
@@ -723,6 +724,15 @@ ${output.shots.map(s => `Shot ${s.number} [${s.camera}]: ${s.description}`).join
           >
             <Download size={18} /> <span className="hidden sm:inline">Export TXT</span>
           </button>
+
+          <a 
+            href="/cineboard.apk" 
+            download
+            className="cinematic-button-primary bg-gold/20 border-gold/40 text-gold flex items-center gap-2 px-3 py-1.5 rounded text-xs font-bold uppercase tracking-widest hover:bg-gold/30 transition-all border"
+            title="Download Android App"
+          >
+            <Smartphone size={18} /> <span className="hidden sm:inline">Download APK</span>
+          </a>
         </div>
       </header>
 

@@ -39,6 +39,14 @@ Agar Google Login berfungsi di Android:
 3. Download `google-services.json` dan letakkan di `android/app/`.
 4. Masukkan **SHA-1 fingerprint** dari keystore Anda di setelan Firebase App Android tersebut.
 
+**Hosting APK di Vercel (Download Link):**
+Agar pengunjung website Vercel dapat mengunduh aplikasi Android secara langsung:
+1. Ambil file `app-release.apk` hasil build Android Studio Anda.
+2. Ubah nama file tersebut menjadi `cineboard.apk`.
+3. Masukkan file `cineboard.apk` ke dalam folder `/public` di root proyek ini.
+4. Push perubahan ke repository Git Anda.
+5. Tombol **"Download APK"** di header aplikasi akan otomatis berfungsi mengunduh file tersebut.
+
 ### 5. Persiapan Aplikasi Laptop (Khusus Laptop)
 
 Aplikasi ini telah dikonfigurasi dengan **Electron** (Software Native) untuk laptop.
