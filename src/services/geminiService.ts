@@ -2,7 +2,7 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { FilmSystemOutput, ProjectInput, RandomIdea, Shot } from "../types";
 import { executeWithSystem } from "../lib/requestSystem";
 
-const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 const callGemini = async (prompt: string, schema: any, cacheKey?: string, fallbackOptions?: any) => {
   return executeWithSystem(async () => {
