@@ -15,4 +15,11 @@ export default defineConfig({
   server: {
     hmr: process.env.DISABLE_HMR !== 'true',
   },
+
+  build: {
+    outDir: 'dist',
+    sourcemap: false,
+    target: 'es2018',
+    minify: 'esbuild',
+  },
 });
