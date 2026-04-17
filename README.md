@@ -39,6 +39,20 @@ Agar Google Login berfungsi di Android:
 3. Download `google-services.json` dan letakkan di `android/app/`.
 4. Masukkan **SHA-1 fingerprint** dari keystore Anda di setelan Firebase App Android tersebut.
 
+### 5. Persiapan Aplikasi Laptop (Khusus Laptop)
+
+Aplikasi ini telah dikonfigurasi dengan **Electron** (Software Native) untuk laptop.
+
+**Langkah Membangun Aplikasi Laptop:**
+1. Pastikan Node.js sudah terinstall di laptop Anda.
+2. Jalankan perintah: `npm run build:laptop`.
+3. Installer aplikasi (.exe) akan otomatis dibuat di folder `dist-desktop/`.
+   - File yang dihasilkan adalah versi *Portable* (Tinggal klik dan jalankan).
+   - Sudah termasuk menu navigasi profesional (File, Edit, View, dsb).
+
+**Menjalankan secara lokal (Dev Mode):**
+`npm run electron:dev`
+
 ## 🛠️ Pengembangan Lokal
 
 ```bash

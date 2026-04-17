@@ -2,7 +2,15 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { FilmSystemOutput, ProjectInput, RandomIdea, Shot } from "../types";
 import { executeWithSystem } from "../lib/requestSystem";
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+const getApiKey = () => {
+  const key = process.env.GEMINI_API_KEY;
+  if (!key && typeof window !== 'undefined') {
+    console.warn("⚠️ GEMINI_API_KEY is not defined. Please check your Environment Variables.");
+  }
+  return key || "UNDEF_KEY";
+};
+
+const ai = new GoogleGenAI({ apiKey: getApiKey() });
 
 const callGemini = async (prompt: string, schema: any, cacheKey?: string, fallbackOptions?: any) => {
   return executeWithSystem(async () => {

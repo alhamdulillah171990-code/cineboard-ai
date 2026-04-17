@@ -1,7 +1,8 @@
 {
   "name": "react-example",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
+  "main": "electron-main.cjs",
   "type": "module",
   "scripts": {
     "dev": "vite --port=3000 --host=0.0.0.0",
@@ -12,7 +13,32 @@
     "cap:sync": "npx cap sync",
     "cap:add:android": "npx cap add android",
     "cap:copy": "npx cap copy",
-    "cap:open": "npx cap open android"
+    "cap:open": "npx cap open android",
+    "electron:dev": "NODE_ENV=development electron .",
+    "electron:build": "npm run build && electron-builder",
+    "electron:start": "electron .",
+    "build:laptop": "npm run build && electron-builder --win --portable"
+  },
+  "build": {
+    "appId": "com.cineboard.ai",
+    "productName": "CineBoard AI Studio",
+    "directories": {
+      "output": "dist-desktop"
+    },
+    "files": [
+      "dist/**/*",
+      "electron-main.cjs",
+      "electron-preload.js"
+    ],
+    "win": {
+      "target": "portable"
+    },
+    "mac": {
+      "target": "dmg"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
   },
   "dependencies": {
     "@capacitor/android": "^8.3.1",
@@ -23,6 +49,8 @@
     "@vitejs/plugin-react": "^5.0.4",
     "clsx": "^2.1.1",
     "dotenv": "^17.2.3",
+    "electron": "^41.2.1",
+    "electron-builder": "^26.8.1",
     "express": "^4.21.2",
     "file-saver": "^2.0.5",
     "firebase": "^12.12.0",
