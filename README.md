@@ -1,20 +1,43 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# CineBoard AI Studio
 
-# Run and deploy your AI Studio app
+Proyek ini adalah aplikasi film production & content engine bertenaga AI untuk pre-produksi profesional, storyboarding, dan shotlist generation.
 
-This contains everything you need to run your app locally.
+## 🚀 Persiapan Hosting di Vercel
 
-View your app in AI Studio: https://ai.studio/apps/606b2a31-5d04-490b-a75a-72e9e4f32814
+Aplikasi ini sudah dikonfigurasi untuk dapat dideploy langsung ke Vercel sebagai **Single Page Application (SPA)**.
 
-## Run Locally
+### 1. Prasyarat
 
-**Prerequisites:**  Node.js
+- Pastikan Anda memiliki akun [Vercel](https://vercel.com).
+- Pastikan Anda memiliki **Gemini API Key** yang valid dari [Google AI Studio](https://aistudio.google.com/app/apikey).
 
+### 2. Langkah-langkah Deployment
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+1. **Hubungkan Repository**: Upload kode ini ke GitHub/GitLab/Bitbucket dan hubungkan ke Vercel.
+2. **Konfigurasi Build**:
+   - **Framework Preset**: Vite
+   - **Build Command**: `npm run build`
+   - **Output Directory**: `dist`
+3. **Environment Variables**:
+   PENTING! Tambahkan variable berikut di Dashboard Vercel (Settings > Environment Variables):
+   - `GEMINI_API_KEY`: Masukkan API Key Gemini Anda.
+
+### 3. Konfigurasi Khusus (Sudah ditambahkan)
+
+- **`vercel.json`**: Menangani routing SPA agar halaman tidak 404 saat direfresh di route tertentu.
+- **`vite.config.ts`**: Secara otomatis menyuntikkan `GEMINI_API_KEY` dari environment variable saat proses build.
+
+## 🛠️ Pengembangan Lokal
+
+```bash
+# Install dependencies
+npm install
+
+# Jalankan dev server
+npm run dev
+```
+
+Pastikan Anda membuat file `.env` di root folder dengan isi:
+```env
+GEMINI_API_KEY=your_api_key_here
+```
