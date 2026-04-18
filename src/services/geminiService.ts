@@ -3,7 +3,7 @@ import { FilmSystemOutput, ProjectInput, RandomIdea, Shot } from "../types";
 import { executeWithSystem } from "../lib/requestSystem";
 
 const getApiKey = () => {
-  const key = process.env.GEMINI_API_KEY;
+  const key = import.meta.env.VITE_API_KEY;
   if (!key && typeof window !== 'undefined') {
     console.warn("⚠️ GEMINI_API_KEY is not defined. Please check your Environment Variables.");
   }
