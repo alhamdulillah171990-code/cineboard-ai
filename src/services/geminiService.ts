@@ -3,7 +3,7 @@ import { FilmSystemOutput, ProjectInput, RandomIdea, Shot } from "../types";
 import { executeWithSystem } from "../lib/requestSystem";
 
 const getApiKey = () => {
-  const key = import.meta.env.VITE_API_KEY;
+  const key = process.env.GEMINI_API_KEY;
   if (!key && typeof window !== 'undefined') {
     console.warn("⚠️ GEMINI_API_KEY is not defined. Please check your Environment Variables.");
   }
@@ -13,17 +13,33 @@ const getApiKey = () => {
 const ai = new GoogleGenAI({ apiKey: getApiKey() });
 
 const callGemini = async (prompt: string, schema: any, cacheKey?: string, fallbackOptions?: any) => {
-  return executeWithSystem(async () => {
-    const response = await ai.models.generateContent({
-      model: "gemini-3.1-pro-preview",
-      contents: prompt,
-      config: {
-        responseMimeType: "application/json",
-        responseSchema: schema
-      }
+  try {
+    const response = await fetch("/api/ai/generate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        prompt,
+        schema,
+        cacheKey,
+        fallbackOptions,
+        config: { model: "gemini-3.1-pro-preview" }
+      })
     });
-    return JSON.parse(response.text);
-  }, { cacheKey, fallback: fallbackOptions });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || "AI Backend Request Failed");
+    }
+
+    return await response.json();
+  } catch (error: any) {
+    console.error("[CineBoard AI Client Error]:", error);
+    // If backend fails, check if we have a local fallback in fallbackOptions
+    if (fallbackOptions?.enabled && fallbackOptions.templateFallback?.enabled) {
+      return generateFallbackOutput({ title: "Error recovery", storyInput: "" } as any);
+    }
+    throw error;
+  }
 };
 
 export const generateCasting = async (input: ProjectInput, storyContext?: string): Promise<FilmSystemOutput['casting']> => {
@@ -618,22 +634,26 @@ export const generateRandomIdea = async (genre: string, language: string = "Indo
 };
 
 export const generateImage = async (prompt: string, aspectRatio: string = "16:9"): Promise<string> => {
-  return executeWithSystem(async () => {
-    const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash-image',
-      contents: [{ text: prompt }],
-      config: {
-        imageConfig: {
-          aspectRatio: aspectRatio as any,
-        }
-      }
+  try {
+    const response = await fetch("/api/ai/image", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        prompt,
+        aspectRatio,
+        cacheKey: `img_${btoa(prompt + aspectRatio)}`
+      })
     });
 
-    for (const part of response.candidates[0].content.parts) {
-      if (part.inlineData) {
-        return `data:image/png;base64,${part.inlineData.data}`;
-      }
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || "Image Generation Failed");
     }
-    throw new Error("No image generated");
-  }, { cacheKey: `img_${btoa(prompt + aspectRatio)}` });
+
+    const data = await response.json();
+    return data.imageUrl;
+  } catch (error) {
+    console.error("[Image Client Error]:", error);
+    throw error;
+  }
 };
